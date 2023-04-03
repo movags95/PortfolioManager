@@ -18,7 +18,7 @@ def create_db():
         c.execute('''
             CREATE TABLE IF NOT EXISTS asset_types (
                 type_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                type TEXT NOT NULL,
+                type TEXT NOT NULL
             )
         ''')
 
@@ -27,6 +27,7 @@ def create_db():
                 asset_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 symbol TEXT NOT NULL,
                 current_price REAL,
+                asset_type_id INTEGER NOT NULL,
                 FOREIGN KEY(asset_type_id) REFERENCES asset_types(type_id)
             )
         ''')
@@ -34,10 +35,11 @@ def create_db():
         c.execute('''
             CREATE TABLE IF NOT EXISTS transactions (
                 transaction_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                FOREIGN KEY(asset_id) REFERENCES assets(asset_id),
+                asset_id INTEGER NOT NULL,
                 purchase_currency TEXT NOT NULL,
                 purchase_price REAL NOT NULL,
-                quantity REAL NOT NULL
+                quantity REAL NOT NULL,
+                FOREIGN KEY(asset_id) REFERENCES assets(asset_id)
             )
         ''')
 
