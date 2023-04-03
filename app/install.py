@@ -1,11 +1,14 @@
 import os
 import sqlite3
-from app.config import VIRTUAL_ENV_PATH, REQUIREMENTS_PATH
+from app.config import VIRTUAL_ENV_PATH, REQUIREMENTS_PATH, DB_PATH
 from app.helpers import directory_exists, file_exists
 
 # Create the SQLite database
 def create_db():
-    conn = sqlite3.connect('app/portfolio.db')
+    print('-----------------------------------------------')
+    print('Creating ' + DB_PATH)
+
+    conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     # Create tables for stocks, crypto, funds, and cash
     c.execute('''
@@ -53,9 +56,19 @@ def create_db():
     conn.commit()
     conn.close()
 
+    print('-----------------------------------------------')
+
+def delete_db():
+    print('-----------------------------------------------')
+    print('Deleting ' + DB_PATH)
+    if file_exists(DB_PATH):
+        os.system('rm ' + DB_PATH)
+    print('-----------------------------------------------')
+
 
 # Install the Flask app
 def configure_environment():
+    print('-----------------------------------------------')
     if directory_exists(VIRTUAL_ENV_PATH) == False:
         print('Creating Virtual Environment in ' + VIRTUAL_ENV_PATH)
         print('-----------------------------------------------')
@@ -73,16 +86,22 @@ def configure_environment():
     else:
         print('Creating requirements.txt file')
         os.system('pip freeze > ' + REQUIREMENTS_PATH)
+    print('-----------------------------------------------')
 
 def create_requirements_txt():
+    print('-----------------------------------------------')
+    print('Creating ' + REQUIREMENTS_PATH)
     os.system('pip freeze > ' + REQUIREMENTS_PATH)
+    print('-----------------------------------------------')
 
 def reset_environment():
-    print('Clearing environment...')
     print('-----------------------------------------------')
-    os.system('rm app/requirements.txt')
-    os.system('rm -r app/.venv ')
-    os.system('rm app/portfolio.db')
+    print('Clearing environment...')
+    os.system('rm ' + REQUIREMENTS_PATH)
+    os.system('rm -r ' + VIRTUAL_ENV_PATH)
+    os.system('rm ' + DB_PATH)
+    print('-----------------------------------------------')
+
 
 
 
