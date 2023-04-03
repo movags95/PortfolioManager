@@ -16,44 +16,28 @@ def create_db():
         c = conn.cursor()
         # Create tables for stocks, crypto, funds, and cash
         c.execute('''
-            CREATE TABLE IF NOT EXISTS assets (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
+            CREATE TABLE IF NOT EXISTS asset_types (
+                type_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 type TEXT NOT NULL,
+            )
+        ''')
+
+        c.execute('''
+            CREATE TABLE IF NOT EXISTS assets (
+                asset_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 symbol TEXT NOT NULL,
-                quantity REAL NOT NULL,
+                current_price REAL,
+                FOREIGN KEY(asset_type_id) REFERENCES asset_types(type_id)
+            )
+        ''')
+
+        c.execute('''
+            CREATE TABLE IF NOT EXISTS transactions (
+                transaction_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                FOREIGN KEY(asset_id) REFERENCES assets(asset_id),
+                purchase_currency TEXT NOT NULL,
                 purchase_price REAL NOT NULL,
-                current_price REAL NOT NULL
-            )
-        ''')
-        c.execute('''
-            CREATE TABLE IF NOT EXISTS stocks (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                asset_id INTEGER NOT NULL,
-                FOREIGN KEY(asset_id) REFERENCES assets(id),
-                UNIQUE(asset_id)
-            )
-        ''')
-        c.execute('''
-            CREATE TABLE IF NOT EXISTS crypto (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                asset_id INTEGER NOT NULL,
-                FOREIGN KEY(asset_id) REFERENCES assets(id),
-                UNIQUE(asset_id)
-            )
-        ''')
-        c.execute('''
-            CREATE TABLE IF NOT EXISTS funds (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                asset_id INTEGER NOT NULL,
-                FOREIGN KEY(asset_id) REFERENCES assets(id),
-                UNIQUE(asset_id)
-            )
-        ''')
-        c.execute('''
-            CREATE TABLE IF NOT EXISTS cash (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                currency TEXT NOT NULL,
-                amount REAL NOT NULL
+                quantity REAL NOT NULL
             )
         ''')
 
