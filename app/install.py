@@ -2,7 +2,6 @@ import os
 import sqlite3
 from app.config import VIRTUAL_ENV_PATH, REQUIREMENTS_PATH
 from app.helpers import directory_exists, file_exists
-import subprocess
 
 # Create the SQLite database
 def create_db():
