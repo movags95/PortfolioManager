@@ -1,5 +1,6 @@
 from config import DB_PATH
 import sqlite3
+import helpers.db_helpers as db_helpers
 
 class Asset:
     def __init__(self, symbol, type, path=DB_PATH):
@@ -68,14 +69,22 @@ class Asset:
 
 
 if __name__ == '__main__':
-    asset = Asset(symbol='xyz', type='stock')
-    # asset = Asset()
-    asset.add_asset_type()
-    asset.add_asset()
-    print(asset.type)
-    print(asset.symbol)
-    print(asset.type_id)
-    print(asset.get_asset_id())
+    # asset = Asset(symbol='xyz', type='stock')
+    # # asset = Asset()
+    # asset.add_asset_type()
+    # asset.add_asset()
+    # print(asset.type)
+    # print(asset.symbol)
+    # print(asset.type_id)
+    # print(asset.get_asset_id())
+    conn = sqlite3.connect(DB_PATH)
+    types = db_helpers.get_asset_types()
+    asset_type_id = db_helpers.get_asset_type_id_for('crypto')
+    # db_helpers.insert_into_assets('msft', 'stock')
+    print(types)
+    print(asset_type_id)
+    print(db_helpers.get_assets())
+
     
     
     
