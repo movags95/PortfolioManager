@@ -23,12 +23,22 @@ def create_db():
         ''')
 
         c.execute('''
+                    CREATE TABLE IF NOT EXISTS currencies (
+                        currency_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        currency_name TEXT NOT NULL,
+                        currency_symbol TEXT NOT NULL
+                    )
+                ''')
+        
+        c.execute('''
             CREATE TABLE IF NOT EXISTS assets (
                 asset_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 symbol TEXT UNIQUE NOT NULL,
                 current_price REAL,
+                currency_id INTEGER,
                 asset_type_id INTEGER NOT NULL,
-                FOREIGN KEY(asset_type_id) REFERENCES asset_types(type_id)
+                FOREIGN KEY(asset_type_id) REFERENCES asset_types(type_id),
+                FOREIGN KEY(currency_id) REFERENCES currencies(currency_id)
             )
         ''')
 
@@ -36,11 +46,22 @@ def create_db():
             CREATE TABLE IF NOT EXISTS transactions (
                 transaction_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 asset_id INTEGER NOT NULL,
-                purchase_currency TEXT NOT NULL,
+                currency_id INTEGER NOT NULL,
                 purchase_price REAL NOT NULL,
                 quantity REAL NOT NULL,
-                FOREIGN KEY(asset_id) REFERENCES assets(asset_id)
+                FOREIGN KEY(asset_id) REFERENCES assets(asset_id),
+                FOREIGN KEY(currency_id) REFERENCES currencies(currency_id)
             )
+        ''')
+
+        c.execute('''
+            INSERT INTO currencies (currency_name, currency_symbol) VALUES ('GBP', '£')
+        ''')
+        c.execute('''
+            INSERT INTO currencies (currency_name, currency_symbol) VALUES ('USD', '$')
+        ''')
+        c.execute('''
+            INSERT INTO currencies (currency_name, currency_symbol) VALUES ('EUR', '€')
         ''')
 
         conn.commit()
